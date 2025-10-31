@@ -1,0 +1,7 @@
+Flask
+psycopg2-binary
+requests
+Faker
+python-dotenv
+Flask-WTF
+email-validator

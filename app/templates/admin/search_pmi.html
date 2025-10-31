@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Search & Delete PMI Records</h2>
+    <p>Search by first or last name. Results are limited to 100.</p>
+
+    {# Display flashed messages (e.g., "Deleted!") #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {# --- 1. The Search Form --- #}
+    <form method="POST" action="{{ url_for('admin.search_pmi') }}" novalidate>
+        {{ form.hidden_tag() }} {# CSRF Token #}
+        
+        <div class="form-group">
+            {{ form.term.label }}
+            {{ form.term(class="form-control", style="width: 300px;") }}
+            {% for error in form.term.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <br>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+    
+    <hr>
+
+    {# --- 2. The Results Table (if any) --- #}
+    {% if results %}
+        <h3>Search Results ({{ results|length }})</h3>
+        <table class="table table-striped" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>NHS Number</th>
+                    <th>Name</th>
+                    <th>D.O.B.</th>
+                    <th>Postcode</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in results %}
+                <tr>
+                    <td>{{ patient.nhs_number }}</td>
+                    <td>{{ patient.title }} {{ patient.given_name }} {{ patient.family_name }}</td>
+                    <td>{{ patient.date_of_birth }}</td>
+                    <td>{{ patient.postcode }}</td>
+                    <td style="width: 120px;">
+                        {# 
+                          --- 3. The Secure Delete Form ---
+                          Each "Delete" button is its own mini-form.
+                          This is the safest way to handle deletes.
+                        #}
+                        <form method="POST" 
+                              action="{{ url_for('admin.delete_pmi', nhs_number=patient.nhs_number) }}"
+                              onsubmit="return confirm('Are you SURE you want to permanently delete this patient?');">
+                            
+                            {{ delete_form.hidden_tag() }} {# CSRF Token #}
+                            
+                            {{ delete_form.submit(class="btn btn-danger btn-sm") }}
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{# We have REMOVED the line: {% import "bootstrap/wtf.html" as wtf %} #}
+
+{% block content %}
+    <h2>Add Batch PMI Records</h2>
+
+    {# Display flashed messages (e.g., "Success!") #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p>How many fake patient records would you like to generate and add to the database?</p>
+
+    {# 
+      - This form POSTs back to itself.
+      - We are now rendering the form fields manually.
+    #}
+    <form method="POST" action="{{ url_for('admin.batch_pmi') }}" novalidate>
+        
+        {# This hidden_tag() is ESSENTIAL for CSRF protection #}
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {# Render the label for the number field #}
+            {{ form.num_records.label(class="form-label") }}
+            <br>
+            
+            {# Render the number field itself #}
+            {# We can still add classes for styling, even without the macro #}
+            {{ form.num_records(class="form-control", style="width: 150px;") }}
+            
+            {# Show any validation errors #}
+            {% for error in form.num_records.errors %}
+                <br>
+                <span style="color: red; font-size: 0.9em;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        
+        <br>
+        
+        {# Render the submit button #}
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+
+{% endblock %}

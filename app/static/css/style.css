@@ -1,0 +1,178 @@
+/* --- static/css/style.css --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    margin: 1em;
+    line-height: 1.5;
+    background-color: #fdfdfd;
+    color: #333;
+}
+
+nav {
+    background-color: #eee;
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    margin-bottom: 1em;
+}
+
+nav h1 {
+    display: inline-block;
+    margin: 0 1em 0 0;
+    font-size: 1.5em;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+}
+
+nav ul li {
+    display: inline-block;
+    margin-right: 1em;
+}
+
+nav a {
+    text-decoration: none;
+    color: #007bff;
+}
+nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    margin-top: 1em;
+}
+
+h2, h3, h4, h5 {
+    color: #333;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 1.5em 0;
+}
+
+form p, fieldset p {
+    margin-bottom: 1em;
+}
+
+form label, fieldset legend {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.3em;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+input[type="email"],
+select,
+textarea {
+    padding: 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Include padding in width */
+    width: 100%;
+    max-width: 400px; /* Limit width */
+}
+input[type="date"] {
+     max-width: 150px;
+}
+
+input[type="submit"], button {
+    background-color: #007bff;
+    color: white;
+    padding: 0.7em 1.5em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+input[type="submit"]:hover, button:hover {
+    background-color: #0056b3;
+}
+
+/* Flashed messages */
+.flashes {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1em;
+}
+.flashes li {
+    padding: 0.8em 1em;
+    margin-bottom: 0.5em;
+    border-radius: 4px;
+    border: 1px solid transparent;
+}
+.flashes li.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.flashes li.error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+.flashes li.warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+.flashes li.info {
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 700px;
+    margin-top: 1em;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    text-align: left;
+    vertical-align: top;
+}
+th {
+    background-color: #f2f2f2;
+    width: 150px; /* Fixed width for labels */
+}
+
+/* Details/Summary for JSON */
+details {
+    margin-top: 0.5em;
+}
+summary {
+    cursor: pointer;
+    color: #007bff;
+}
+pre {
+    background-color: #eee;
+    padding: 1em;
+    border-radius: 4px;
+    overflow-x: auto; /* Allow horizontal scrolling for long lines */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 0.9em;
+}
+code {
+    font-family: monospace;
+}
+
+fieldset {
+    border: 1px solid #ccc;
+    padding: 1em;
+    margin-bottom: 1em;
+    border-radius: 4px;
+}
+legend {
+    font-weight: bold;
+    padding: 0 0.5em;
+}

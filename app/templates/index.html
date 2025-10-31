@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Welcome to the EHR Demonstrator</h2>
+    <p>This application demonstrates interactions between a Patient Master Index (PMI), an openEHR server (EHRBase), and different user roles.</p>
+    <p>Select a role from the navigation above to explore the features.</p>
+
+    <h3>Setup Steps Overview:</h3>
+    <ol>
+        <li>Ensure Docker & Python are installed.</li>
+        <li>Run `docker-compose -f ehrbase.yml up -d` to start EHRBase & Postgres.</li>
+        <li>Create & activate a Python virtual environment (`python -m venv venv`, `source venv/bin/activate`).</li>
+        <li>Install dependencies: `pip install -r requirements.txt`.</li>
+        <li>Create the `.env` file with a `SECRET_KEY`.</li>
+        <li>Run `python setup_pmi_database.py` to create the PMI database/table.</li>
+        <li>Run `python install_templates.py` to upload the openEHR templates to EHRBase.</li>
+        <li>(Optional) Run `python add_pmi_records.py <number>` to add fake patients.</li>
+        <li>Run the web app: `flask run`.</li>
+    </ol>
+     <p>See the `README.md` file for detailed instructions.</p>
+{% endblock %}

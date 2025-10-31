@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Add New Patient to PMI</h2>
+
+    {# Display flashed messages (success/error) #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    {# Render the form using WTForms helpers #}
+    <form method="POST" action="{{ url_for('admin.add_pmi') }}" novalidate>
+        {{ form.hidden_tag() }} {# Renders CSRF token and other hidden fields #}
+
+        <p>
+            {{ form.nhs_number.label }}<br>
+            {{ form.nhs_number(size=12) }}<br>
+            {% for error in form.nhs_number.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+        <p>
+            {{ form.title.label }}<br>
+            {{ form.title(size=10) }}<br>
+            {% for error in form.title.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+        <p>
+            {{ form.given_name.label }}<br>
+            {{ form.given_name(size=30) }}<br>
+            {% for error in form.given_name.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+         <p>
+            {{ form.family_name.label }}<br>
+            {{ form.family_name(size=30) }}<br>
+            {% for error in form.family_name.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+         <p>
+            {{ form.date_of_birth.label }} (YYYY-MM-DD)<br>
+            {{ form.date_of_birth() }}<br>
+            {% for error in form.date_of_birth.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+         <p>
+            {{ form.gender.label }}<br>
+            {{ form.gender() }}<br>
+            {% for error in form.gender.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+        <p>
+            {{ form.address_line_1.label }}<br>
+            {{ form.address_line_1(size=40) }}<br>
+            {% for error in form.address_line_1.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+        <p>
+            {{ form.address_line_2.label }}<br>
+            {{ form.address_line_2(size=40) }}<br>
+            {% for error in form.address_line_2.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+         <p>
+            {{ form.town_or_city.label }}<br>
+            {{ form.town_or_city(size=30) }}<br>
+            {% for error in form.town_or_city.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+        <p>
+            {{ form.county.label }}<br>
+            {{ form.county(size=30) }}<br>
+            {% for error in form.county.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+        <p>
+            {{ form.postcode.label }}<br>
+            {{ form.postcode(size=10) }}<br>
+            {% for error in form.postcode.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+        <p>
+            {{ form.phone_mobile.label }}<br>
+            {{ form.phone_mobile(size=20) }}<br>
+            {% for error in form.phone_mobile.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+        <p>
+            {{ form.phone_home.label }}<br>
+            {{ form.phone_home(size=20) }}<br>
+            {% for error in form.phone_home.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+         <p>
+            {{ form.email_address.label }}<br>
+            {{ form.email_address(size=40) }}<br>
+            {% for error in form.email_address.errors %} <span style="color: red;">[{{ error }}]</span> {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+     <p><a href="{{ url_for('admin.home') }}">Back to Admin Tools</a></p>
+
+{% endblock %}

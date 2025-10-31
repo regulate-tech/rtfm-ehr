@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Patient Record View</h2>
+
+     {# Display flashed messages #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p>Search for your record using either your NHS Number OR your full name and date of birth.</p>
+
+    {# Render the search form #}
+    <form method="POST" action="{{ url_for('patient.search_my_records') }}" novalidate>
+        {{ form.hidden_tag() }} {# CSRF token #}
+
+        <fieldset>
+            <legend>Search by NHS Number</legend>
+            <p>
+                {{ form.nhs_number.label }}<br>
+                {{ form.nhs_number(size=12) }}<br>
+                {% for error in form.nhs_number.errors %} <span style="color: red;">[{{ error }}]</span><br> {% endfor %}
+            </p>
+        </fieldset>
+
+        <p style="text-align: center; font-weight: bold;">OR</p>
+
+         <fieldset>
+            <legend>Search by Name and Date of Birth</legend>
+            <p>
+                {{ form.given_name.label }}<br>
+                {{ form.given_name(size=30) }}<br>
+                {% for error in form.given_name.errors %} <span style="color: red;">[{{ error }}]</span><br> {% endfor %}
+            </p>
+            <p>
+                {{ form.family_name.label }}<br>
+                {{ form.family_name(size=30) }}<br>
+                {% for error in form.family_name.errors %} <span style="color: red;">[{{ error }}]</span><br> {% endfor %}
+            </p>
+            <p>
+                {{ form.date_of_birth.label }} (YYYY-MM-DD)<br>
+                {{ form.date_of_birth() }}<br>
+                {% for error in form.date_of_birth.errors %} <span style="color: red;">[{{ error }}]</span><br> {% endfor %}
+            </p>
+        </fieldset>
+
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <hr>
+
+    {# Display results if a search was performed #}
+    {% if search_performed %}
+        <h3>Search Results</h3>
+
+        {% if patient %} {# Check if a unique patient dict was passed #}
+            <h4>Patient Details (from PMI)</h4>
+            <table border="1" cellpadding="5">
+                <tr><th>NHS Number</th><td>{{ patient.nhs_number | default('N/A') }}</td></tr>
+                <tr><th>Name</th><td>{{ patient.title | default('') }} {{ patient.given_name | default('') }} {{ patient.family_name | default('') }}</td></tr>
+                <tr><th>Date of Birth</th><td>{{ patient.date_of_birth | default('N/A') }}</td></tr>
+                <tr><th>Gender</th><td>{{ patient.gender | default('N/A') }}</td></tr>
+                <tr><th>Address</th><td>
+                    {{ patient.address_line_1 | default('') }}<br>
+                    {% if patient.address_line_2 %}{{ patient.address_line_2 }}<br>{% endif %}
+                    {{ patient.town_or_city | default('') }}<br>
+                    {{ patient.county | default('') }}<br>
+                    {{ patient.postcode | default('') }}
+                </td></tr>
+                 <tr><th>Mobile Phone</th><td>{{ patient.phone_mobile | default('N/A') }}</td></tr>
+                 <tr><th>Home Phone</th><td>{{ patient.phone_home | default('N/A') }}</td></tr>
+                 <tr><th>Email</th><td>{{ patient.email_address | default('N/A') }}</td></tr>
+            </table>
+
+            <h4 style="margin-top: 20px;">Electronic Health Record Data (from EHRBase)</h4>
+            {% if ehr_id %}
+                 <p><strong>Your EHR ID:</strong> {{ ehr_id }}</p>
+                 {% if compositions %}
+                     <h5>Record Entries:</h5>
+                     
+                     {% for comp in compositions %}
+                        <div style="border: 1px solid #ccc; margin-bottom: 15px; padding: 10px; background-color: #f9f9f9;">
+                            <strong>Entry Name:</strong> {{ comp.name.value | default('N/A') }}<br>
+                            <strong>Recorded Time:</strong>
+                                {% if comp.context and comp.context.start_time %}
+                                    {{ comp.context.start_time.value | default('N/A')}}
+                                {% else %} N/A {% endif %}<br>
+
+                            {% if comp.parsed_data %}
+                                <table style="margin-top: 10px; border: 1px solid #aaa; background-color: #fff;">
+                                    <thead>
+                                        <tr style="background-color: #eee;">
+                                            <th style="padding: 5px; border-bottom: 1px solid #aaa;">Measurement</th>
+                                            <th style="padding: 5px; border-bottom: 1px solid #aaa;">Value</th>
+                                            <th style="padding: 5px; border-bottom: 1px solid #aaa;">Units</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in comp.parsed_data %}
+                                        <tr>
+                                            <td style="padding: 5px;"><strong>{{ item.name }}</strong></td>
+                                            <td style="padding: 5px;">{{ item.value }}</td>
+                                            <td style="padding: 5px;">{{ item.units }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p><em>(No key data extracted from this composition)</em></p>
+                            {% endif %}
+                            <details style="margin-top: 10px;">
+                                <summary>View Full Entry Data (JSON)</summary>
+                                <pre><code>{{ comp.pretty_json }}</code></pre>
+                            </details>
+                        </div>
+                     {% endfor %}
+                     {% elif not get_flashed_messages(category_filter=['error', 'warning']) %}
+                     <p>Your Electronic Health Record contains no entries yet.</p>
+                 {% endif %}
+            {% elif not get_flashed_messages(category_filter=['error', 'warning']) %}
+                 <p>No Electronic Health Record found associated with this patient record.</p>
+            {% endif %}
+
+        {% elif not get_flashed_messages(category_filter=['error', 'warning']) %}
+            {% if search_performed %}
+                 <p>No record found matching your search criteria.</p>
+            {% endif %}
+        {% endif %} {# End if patient #}
+
+    {% endif %} {# End if search_performed #}
+
+
+{% endblock %}

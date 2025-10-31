@@ -1,0 +1,34 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Instance folder (Flask)
+instance/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.env
+
+# IDE files
+.idea/
+.vscode/
+
+# Other
+*.log
+*.pot
+*.sqlite3
+*.db
+/.vs

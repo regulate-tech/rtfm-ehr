@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Data Entry - Find Patient EHR</h2>
+
+    {# Display flashed messages #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p>Enter the NHS Number to find the patient's EHR and add vital signs data.</p>
+
+    {# Render the search form #}
+    <form method="POST" action="{{ url_for('data_entry.search') }}" novalidate>
+        {{ form.hidden_tag() }} {# CSRF token #}
+
+        <p>
+            {{ form.nhs_number.label }}<br>
+            {{ form.nhs_number(size=12) }}<br>
+            {% for error in form.nhs_number.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+{% endblock %}

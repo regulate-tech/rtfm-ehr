@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Data Entry Options</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p>Select an action for:</p>
+    <ul>
+        <li><strong>NHS Number:</strong> {{ nhs_number }}</li>
+        <li><strong>EHR ID:</strong> {{ ehr_id }}</li>
+    </ul>
+
+    <hr>
+
+    <h3>Manual Data Entry</h3>
+    <ul>
+        <li><a href="{{ url_for('data_entry.enter_clinic_check', ehr_id=ehr_id, nhs_number=nhs_number) }}">Enter Vitals (Clinic Check Template)</a></li>
+    </ul>
+    <ul>
+
+    <h3>Automated Data Generation</h3>
+    <form method="POST" action="{{ url_for('data_entry.generate_hba1c', ehr_id=ehr_id, nhs_number=nhs_number) }}">
+        {{ form.hidden_tag() }} <button type="submit">Generate Random HbA1c Result (30-50 mmol)</button>
+    </form>
+
+    <p style="margin-top: 20px;"><a href="{{ url_for('data_entry.search') }}">Back to Search</a></p>
+
+{% endblock %}

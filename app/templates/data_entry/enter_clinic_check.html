@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Enter Vital Signs (Clinic Check)</h2>
+
+     {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p>Submitting data for:</p>
+    <ul>
+        <li><strong>NHS Number:</strong> {{ nhs_number or 'N/A' }}</li>
+        <li><strong>EHR ID:</strong> {{ ehr_id }}</li>
+    </ul>
+
+    <hr>
+
+    <form method="POST" action="{{ url_for('data_entry.enter_clinic_check', ehr_id=ehr_id, nhs_number=nhs_number) }}" novalidate>
+        {{ form.hidden_tag() }}
+        <h3>Blood Pressure</h3>
+        <p>
+            {{ form.systolic.label }}<br>
+            {{ form.systolic(size=5) }}<br>
+            {% for error in form.systolic.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+         <p>
+            {{ form.diastolic.label }}<br>
+            {{ form.diastolic(size=5) }}<br>
+            {% for error in form.diastolic.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>{{ form.submit() }}</p>
+    </form>
+
+     <p><a href="{{ url_for('data_entry.dashboard', ehr_id=ehr_id, nhs_number=nhs_number) }}">Back to Patient Dashboard</a></p>
+
+{% endblock %}

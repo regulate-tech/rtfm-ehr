@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{{ title }} - EHR Demonstrator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav>
+        <h1>EHR Demonstrator</h1>
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('admin.home') }}">Admin</a></li>
+            <li><a href="{{ url_for('data_entry.search') }}">Data Entry</a></li>
+            <li><a href="{{ url_for('clinician.home') }}">Clinician View</a></li>
+            <li><a href="{{ url_for('patient.search_my_records') }}">Patient View</a></li>
+        </ul>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

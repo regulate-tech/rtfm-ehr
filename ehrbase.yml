@@ -1,0 +1,46 @@
+services:
+
+  postgres-db:
+    image: ehrbase/ehrbase-postgres:13.4.v2
+    container_name: ehrbase_postgres
+    environment:
+      # Superuser credentials
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      # --- POSTGRES_DB REMOVED ---
+      # Prevents conflict with EHRBase initialization.
+
+      # Application-specific users (used by EHRBase internally)
+      - EHRBASE_USER_ADMIN=ehrbase_admin
+      - EHRBASE_PASSWORD_ADMIN=ehrbase_admin_password
+      - EHRBASE_USER=ehrbase_user
+      - EHRBASE_PASSWORD=ehrbase_user_password
+    volumes:
+      - ehrbase-pg-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      # Check against the default 'postgres' database.
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  ehrbase:
+    image: ehrbase/ehrbase:latest # Or pin to a specific version
+    container_name: ehrbase_server
+    ports:
+      - "8080:8080"
+    environment:
+      # EHRBase connects using these credentials
+      - DB_URL=jdbc:postgresql://postgres-db:5432/ehrbase # EHRBase creates this DB
+      - DB_USER=ehrbase_user
+      - DB_PASS=ehrbase_user_password
+      - DB_USER_ADMIN=ehrbase_admin # Admin user for schema management
+      - DB_PASS_ADMIN=ehrbase_admin_password
+    depends_on:
+      postgres-db:
+        condition: service_healthy # Wait for DB healthcheck
+
+volumes:
+  ehrbase-pg-data: # Persists PostgreSQL data

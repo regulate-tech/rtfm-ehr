@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>Administrator Tools</h2>
+
+    {# Display flashed messages #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          {# Display multi-line messages correctly #}
+          <li class="{{ category }}">{{ message | replace('. ', '.<br>') | safe }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p>Tools:</p>
+    <ul>
+        <li><a href="{{ url_for('admin.add_pmi') }}">Add Single PMI Record</a></li>
+        <li><a href="{{ url_for('admin.batch_pmi') }}">Add Batch PMI Records</a></li>
+        <li><a href="{{ url_for('admin.view_create_ehr') }}">View/Create EHR Record by NHS No.</a></li>
+        <li><a href="{{ url_for('admin.search_pmi') }}">Search & Delete PMI Records</a></li>
+        <li>Sync All PMI to EHR (See button below)</li>
+    </ul>
+
+    <hr>
+
+    {# Form/Button for Sync All #}
+    <div>
+        <h3>Synchronize All PMI Records to EHRBase</h3>
+        <p>This will check every patient in the PMI database. If an EHR does not exist in EHRBase for their NHS Number, it will be created. This might take a while if you have many records.</p>
+        <form method="POST" action="{{ url_for('admin.sync_pmi_ehr') }}" style="display: inline;">
+             {# Simple CSRF protection for POST requests without a full WTForm #}
+             <input type="hidden" name="csrf_token" value="{{ csrf_token }}"/> {# Pass token from view #}
+             <button type="submit" onclick="return confirm('Are you sure you want to sync all PMI records? This could take time.');">
+                 Start Full Sync
+             </button>
+        </form>
+    </div>
+
+{% endblock %}

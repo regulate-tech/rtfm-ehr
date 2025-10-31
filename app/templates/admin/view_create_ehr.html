@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>View or Create EHR Record</h2>
+
+    {# Display flashed messages #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <p>Enter an NHS Number to check if an EHR exists in EHRBase. If it doesn't exist, one will be created.</p>
+
+    {# Render the search form #}
+    <form method="POST" action="{{ url_for('admin.view_create_ehr') }}" novalidate>
+        {{ form.hidden_tag() }} {# CSRF token #}
+
+        <p>
+            {{ form.nhs_number.label }}<br>
+            {{ form.nhs_number(size=12) }}<br>
+            {% for error in form.nhs_number.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+         {# Changed button text #}
+        <p><input type="submit" value="Check / Create EHR"></p>
+    </form>
+
+    {# Display results if a search was performed #}
+    {% if searched_nhs %}
+        <hr>
+        <h3>Results for NHS Number: {{ searched_nhs }}</h3>
+        {% if action_taken == 'found' %}
+            <p style="color: blue;">✅ Existing EHR Found.</p>
+            <p><strong>EHR ID:</strong> {{ ehr_id }}</p>
+        {% elif action_taken == 'created' %}
+            <p style="color: green;">✅ New EHR Successfully Created.</p>
+            <p><strong>EHR ID:</strong> {{ ehr_id }}</p>
+        {% elif action_taken == 'creation_failed' %}
+            <p style="color: red;">❌ Failed to create EHR. Check flashed messages above and server logs.</p>
+        {% elif get_flashed_messages(category_filter=['error']) %}
+             <p style="color: red;">❌ An error occurred. See messages above.</p>
+        {% else %}
+             {# Should not normally be reached if action_taken covers logic #}
+             <p>No action taken or status unclear.</p>
+        {% endif %}
+    {% endif %}
+
+    <p style="margin-top: 20px;"><a href="{{ url_for('admin.home') }}">Back to Admin Tools</a></p>
+
+{% endblock %}
