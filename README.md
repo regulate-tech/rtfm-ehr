@@ -7,6 +7,8 @@ It includes:
 * An EHRBase instance for storing clinical data according to openEHR templates.
 * Scripts for setup, template installation, and sample data generation.
 * A Flask web application with interfaces for Admin, Data Entry, Clinician, and Patient views.
+* A description of the landscape of EHR systems with a focus on openEHR in [EXPLAINER.md](EXPLAINER.md).
+* A tutorial designed for helping a non-technical decision maker understand these systems in [TUTORIAL.md](TUTORIAL.md)
 
 ---
 
@@ -16,15 +18,15 @@ The project is organized as follows:
 
 ```
 
-ehr\_demonstrator/
+ehr_demonstrator/
 ├── app/                  \# Flask application package
 │   ├── **init**.py         \# Flask app factory
-│   ├── ehrbase\_api.py      \# EHRBase API helper functions
+│   ├── ehrbase_api.py      \# EHRBase API helper functions
 │   ├── blueprints/         \# Flask Blueprints for different sections
 │   │   ├── **init**.py
 │   │   ├── admin.py
 │   │   ├── clinician.py
-│   │   ├── data\_entry.py
+│   │   ├── data_entry.py
 │   │   ├── forms.py        \# WTForms definitions
 │   │   └── patient.py
 │   ├── static/             \# Static files (CSS, JS, images)
@@ -35,22 +37,23 @@ ehr\_demonstrator/
 │       ├── index.html
 │       ├── admin/
 │       ├── clinician/
-│       ├── data\_entry/
+│       ├── data_entry/
 │       └── patient/
 ├── templates/              \# Folder for OpenEHR templates (.opt files)
-│   └── vital\_signs.opt
+│   └── clinic_check.opt
+│   └── lab_result_hba1c.opt
 ├── .env                    \# Flask environment variables (SECRET\_KEY) - **Create this\!**
 ├── .gitignore              \# Git ignore file
 ├── config.ini              \# Unified config for DBs and EHRBase API
 ├── config.py               \# Flask config class
-├── create\_pmi\_schema.sql   \# SQL schema for PMI table
+├── create_pmi_schema.sql   \# SQL schema for PMI table
 ├── ehrbase.yml             \# Docker Compose file for EHRBase/Postgres
-├── install\_templates.py    \# Script to install .opt templates
+├── install_templates.py    \# Script to install .opt templates
 ├── requirements.txt        \# Python dependencies
 ├── run.py                  \# Script to run the Flask app
-├── setup\_pmi\_database.py   \# Script to create PMI DB and table
-├── add\_pmi\_records.py      \# Script to add fake PMI data
-└── sync\_pmi\_ehrbase.py     \# Original sync script (functionality in Flask admin)
+├── setup_pmi_database.py   \# Script to create PMI DB and table
+├── add_pmi_records.py      \# Script to add fake PMI data
+└── sync_pmi_ehrbase.py     \# Original sync script (functionality in Flask admin)
 
 ````
 
@@ -230,3 +233,4 @@ Before you begin, ensure you have the following installed:
 
 This updated `README.md` now contains the project structure and the Mermaid diagram, providing a more complete overview directly within the installation instructions.
 ```
+
