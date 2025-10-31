@@ -1,4 +1,4 @@
-Here is your tech explainer note on Electronic Health Records and the openEHR standard.
+# Electronic Health Records Explainer
 
 ### 30-Second Executive Summary
 
