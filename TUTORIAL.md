@@ -67,17 +67,25 @@ We are about to install several "tools." We don't want to mix them up with other
 >   * **Analogy:** This is like setting up a dedicated, clean workbench. Instead of using all the tools in your main (and messy) garage, you create a new, empty bench and only add the *specific* tools this one project needs.
 
 Type this command to **create** the workbench:
+> **A Quick Note:** Your helper might have set up your computer to use `python3` instead of `python`. If `python` gives you an error, just try `python3` in its place for all commands in this tutorial\!
 
 ```bash
 python -m venv venv
 ```
+(Or, if `python` gives an error, use `python3`):
 
-> **A Quick Note:** Your helper might have set up your computer to use `python3` instead of `python`. If `python` gives you an error, just try `python3` in its place for all commands in this tutorial\!
-
+```bash
+python3 -m venv venv
+```
 Now, type this command to **activate** it (on macOS/Linux):
 
 ```bash
 source venv/bin/activate
+```
+**If you are on Windows (using 'Command Prompt' or 'Powershell'):**
+
+```bash
+venv\Scripts\activate
 ```
 
 *(This command says, "I am now working at this new workbench." You'll see `(venv)` appear in your prompt, showing you it's active).*
@@ -126,6 +134,11 @@ First, let's create the **"Customer Loyalty Database" (PMI)**:
 ```bash
 python setup_pmi_database.py
 ```
+(Or use `python3`):
+
+```bash
+python3 setup_pmi_database.py
+```
 
 *(This wizard just built the empty `patient_index` table, ready for patient names and NHS numbers).*
 
@@ -133,6 +146,12 @@ Next, let's install the **"standardized forms"** into our "Secure Warehouse":
 
 ```bash
 python install_templates.py
+```
+
+(Or use `python3`):
+
+```bash
+python3 install_templates.py
 ```
 
 *(This is a vital step\! This wizard just installed **two** "standardized forms" into the "Warehouse Manager" (EHRBase):*
@@ -150,6 +169,12 @@ Type this command:
 
 ```bash
 python add_pmi_records.py 20
+```
+
+(Or use `python3`):
+
+```bash
+python3 add_pmi_records.py 20
 ```
 
 *(This just populated our PMI database with 20 dummy records, e.g., "Jane Doe, NHS Number 99999901").*
@@ -279,3 +304,4 @@ If you're curious about the technologies you just used, here are some non-techni
   * **What is Docker?** A simple, 5-minute explanation. [https://www.docker.com/why-docker/](https://www.docker.com/why-docker/)
   * **What is Flask?** The "Shop Front" you used. [https://flask.palletsprojects.com/](https://flask.palletsprojects.com/)
   * **The NHS and openEHR:** The Apperta Foundation (a UK-based clinical-led organisation) strongly advocates for these open standards in the NHS. [https://apperta.org/](https://apperta.org/)
+
