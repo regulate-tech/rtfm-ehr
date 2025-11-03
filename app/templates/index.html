@@ -1,21 +1,219 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Welcome to the EHR Demonstrator</h2>
-    <p>This application demonstrates interactions between a Patient Master Index (PMI), an openEHR server (EHRBase), and different user roles.</p>
-    <p>Select a role from the navigation above to explore the features.</p>
+<div class="tutorial-summary">
 
-    <h3>Setup Steps Overview:</h3>
-    <ol>
-        <li>Ensure Docker & Python are installed.</li>
-        <li>Run `docker-compose -f ehrbase.yml up -d` to start EHRBase & Postgres.</li>
-        <li>Create & activate a Python virtual environment (`python -m venv venv`, `source venv/bin/activate`).</li>
-        <li>Install dependencies: `pip install -r requirements.txt`.</li>
-        <li>Create the `.env` file with a `SECRET_KEY`.</li>
-        <li>Run `python setup_pmi_database.py` to create the PMI database/table.</li>
-        <li>Run `python install_templates.py` to upload the openEHR templates to EHRBase.</li>
-        <li>(Optional) Run `python add_pmi_records.py <number>` to add fake patients.</li>
-        <li>Run the web app: `flask run`.</li>
-    </ol>
-     <p>See the `README.md` file for detailed instructions.</p>
+  <h2>A Happy Half Hour on Electronic Health Records</h2>
+
+  <p>Ever had to make a decision about a multi-million pound NHS IT project?   Ever wondered what an 'Electronic Health Record' system <em>actually</em> is?   This tutorial is for you.</p>
+  
+  <p>In just 30 minutes, this hands-on guide demystifies health tech. You will run a simple, safe 'toy' version of a health record system right on your own computer. You'll learn what it means to 'run code,' see how patient data is handled, and gain the confidence to ask better questions in your next policy or procurement meeting. No technical background required.</p>
+
+</div>    
+
+<hr>
+
+<section class="tutorial-steps">
+
+  <h2>Try It Yourself: See How the Data Flows</h2>
+  <p>
+    This page is your "command centre." We'll "role-play" as different
+    staff members to see how data moves through a modern health system.
+  </p>
+  <p>
+    You'll use the navigation bar at the <strong>top of this page</strong> 
+    (e.g., "Admin", "Data Entry") to perform an action, and then 
+    <strong>return here</strong> for the next step. Let's begin!
+  </p>
+
+  <hr>
+
+  <h3>Role 1: The Administrator</h3>
+  <p>
+    Let's start by getting the system ready. We have 20 patients in our
+    main "customer list" (the PMI), but they don't have "secure medical 
+    files" (the EHR) yet. Let's create them.
+  </p>
+  <ol>
+    <li>In the top navigation bar, click on <strong>"Admin"</strong>.</li>
+    <li>
+      Click the button that says <strong>"Sync All PMI to EHR"</strong>.
+    </li>
+    <li>
+      You should see a success message.
+    </li>
+    <li>
+      <strong>Now, come back to this page</strong> for the next role.
+    </li>
+  </ol>
+  
+  <h4>What just happened?</h4>
+  <p>
+    You just told the system: "Please read all 20 names from the 
+    'Customer List' and create 20 new, <strong>empty</strong>, 
+    secure medical files, one for each of their NHS numbers."
+  </p>
+  <p>
+    Our 20 patients are now "in the system," ready to have clinical 
+    data added.
+  </p>
+
+  <hr>
+
+  <h3>Role 2: The Data Entry Clerk</h3>
+  <p>
+    Now, let's pretend a patient has had their blood pressure taken 
+    and a lab test done.
+  </p>
+  
+  <h4>Part A: Get a Patient ID</h4>
+  <ol>
+    <li>
+      Go back to the <strong>"Admin"</strong> page in the top navigation bar.
+    </li>
+    <li>
+      Click on <strong>"Search & Delete Patient Master Index Records"</strong>.
+    </li>
+    <li>
+      Search for any term, eg the letter 'a' and this will show patient records. 
+    </li>
+    <li>
+    <strong> Copy the NHS number</strong> of at least one of the patients in the 
+      list (e.g., <em>99999901</em>). You'll need this for the next few steps.
+    </li>
+  </ol>
+
+  <h4>Part B: Enter Clinical Data (Two Ways)</h4>
+  <ol>
+    <li>
+      Now, in the top navigation bar, click on <strong>"Data Entry"</strong>.
+    </li>
+    <li>
+      <strong>Paste</strong> the NHS number (<em>99999901</em>) into 
+      the search box and click <strong>"Search Patient"</strong>.
+    </li>
+    <li>
+      You'll see the patient's details and two new buttons. Let's try the
+      first one, just like a nurse would.
+    </li>
+    <li>
+      Click <strong>"Enter Clinic Check Vitals"</strong>.
+    </li>
+    <li>
+      Enter a <strong>Systolic</strong> value (e.g., <em>120</em>) and a 
+      <strong>Diastolic</strong> value (e.g., <em>80</em>). Click 
+      <strong>"Submit Vitals"</strong>.
+    </li>
+    <li>
+      You'll be back on the patient's data entry page. Now let's simulate
+      an automated lab result.
+    </li>
+    <li>
+      Click the <strong>"Generate Random HbA1c Result (30-50mmol)"</strong> 
+      button.
+    </li>
+    <li>
+      You should see a success message for both entries.
+    </li>
+    <li>
+      <strong>Great! Return to this page for the next role.</strong>
+    </li>
+  </ol>
+
+  <h4>What just happened?</h4>
+  <p>
+    You just submitted clinical data in two different ways!
+  </p>
+  <ul>
+    <li>
+      First, you <strong>manually</strong> entered data (blood pressure) 
+      using a standard form, just like a nurse.
+    </li>
+    <li>
+      Second, you triggered an <strong>automated</strong> data feed 
+      (the lab result), just like a lab machine would.
+    </li>
+  </ul>
+  <p>
+    Both sets of data were securely filed in patient <em>99999901</em>'s 
+    "Secure Medical File."
+  </p>
+
+  <hr>
+
+  <h3>Role 3: The Clinician</h3>
+  <p>
+    Time to be the doctor. Let's find that patient's history.
+  </p>
+  <ol>
+    <li>
+      In the top navigation bar, click on <strong>"Clinician View"</strong>.
+    </li>
+    <li>
+      <strong>Paste</strong> the same NHS number (<em>99999901</em>) 
+      and click <strong>"Search Patient"</strong>.
+    </li>
+    <li>
+      You will now see <strong>two</strong> "compositions" listed: the 
+      "Clinic Check" (blood pressure) and the "Lab Result" (HbA1c).
+    </li>
+    <li>
+      <strong>All done! Come back to this page for the final role.</strong>
+    </li>
+  </ol>
+
+  <h4>What just happened?</h4>
+  <p>
+    As the 'clinician', you've just looked into the patient's secure file
+    and can see all the data, from all the different sources, 
+    in one place.
+  </p>
+
+  <hr>
+
+  <h3>Role 4: The Patient (The 'Patient Portal')</h3>
+  <p>
+    Finally, let's see this from the most important perspective: 
+    the patient.
+  </p>
+  <ol>
+    <li>
+      In the top navigation bar, click on <strong>"Patient View"</strong>.
+    </li>
+    <li>
+      <strong>Paste</strong> the same NHS number (<em>99999901</em>) 
+      and click <strong>"Search by NHS No"</strong>.
+    </li>
+    <li>
+      Look closely at what you see.
+    </li>
+    <li>
+      <strong>Congratulations! You've finished the tour.</strong>
+    </li>
+  </ol>
+
+  <h4>What just happened? (This is the "Aha!" Moment)</h4>
+  <p>
+    You've just seen a "Patient Portal" in action. Notice that it 
+    pulled information from <strong>two completely separate systems</strong> 
+    at the same time:
+  </p>
+  <ul>
+    <li>
+      <strong>Demographic Details:</strong> Their name and address were 
+      pulled from the "Customer List" (the PMI).
+    </li>
+    <li>
+      <strong>Clinical Data:</strong> Their blood pressure and lab results 
+      were pulled from the "Secure Warehouse" (the EHR).
+    </li>
+  </ul>
+  <p>
+    This is the core concept of modern, connected IT: a single, simple
+    application can securely combine data from multiple, specialized 
+    databases to give the user (whether a doctor or a patient) a single,
+    complete picture.
+  </p>
+
+</section>
 {% endblock %}

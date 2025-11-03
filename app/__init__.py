@@ -4,10 +4,11 @@ from config import Config
 import json
 
 NODE_PROPERTIES = {
-    'You': {'emoji': '👩‍💻', 'class': 'node-you'},
-    'EHR Manager': {'emoji': '🗄️', 'class': 'node-ehr'},
-    'EHR Database': {'emoji': '💾', 'class': 'node-db'},
-    'PMI Database': {'emoji': '📈', 'class': 'node-pmi'},
+    'You': {'emoji': '🧑‍🎓', 'class': 'node-you'},
+    'Laboratory': {'emoji': '🧪', 'class': 'node-lab'},
+    'EHR Manager': {'emoji': '📈', 'class': 'node-ehr'},
+    'EHR Database': {'emoji': '🗄️', 'class': 'node-db'},
+    'PMI Database': {'emoji': '💾', 'class': 'node-pmi'},
 }
 
 def get_node_map():

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Get all our elements
+    // Get all our elements (unchanged)
     const senderNode = document.getElementById('node-sender');
     const receiverNode = document.getElementById('node-receiver');
     const message = document.getElementById('message');
@@ -14,11 +14,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let animationSteps = [];
     let nodeMap = {};
     let finalMessage = "";
-    
+    let redirectUrl = ""; 
+
     try {
         animationSteps = JSON.parse(container.dataset.steps);
         nodeMap = JSON.parse(container.dataset.nodes);
         finalMessage = container.dataset.finalMessage;
+        redirectUrl = container.dataset.redirectUrl;
     } catch (e) {
         console.error('Failed to parse data:', e);
         return;
@@ -30,18 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- The Main Animation Loop ---
 
-    let currentStep = 0;
-    const stepDelay = 3000; // 3 seconds per step
-    const flashDelay = 1000; // 1 second pause before flash
+    const stepDelay = 3000;
+    const flashDelay = 1000;
+    const redirectDelay = 2000;
+    const resultsDelay = 1500; // * NEW: 1.5 sec pause after flash, before showing results
 
     function showStep(index) {
         
-        // --- This is a normal animation step ---
+        // --- This is a normal animation step (unchanged) ---
         if (index < animationSteps.length) {
             const step = animationSteps[index];
             const [sender, receiver, explanation, type] = step;
             
-            // Get node styles
             const senderData = nodeMap[sender];
             const receiverData = nodeMap[receiver];
 
@@ -55,24 +57,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 receiverNode.className = `node ${receiverData.class}`;
             }
             
-            // 2. Reset styles from "Done" state
+            // 2. Reset styles
             explanationText.textContent = explanation;
             explanationText.classList.remove('done');
             message.style.display = 'block';
-            flashPlaceholder.innerHTML = ''; // Clear any old flash
+            flashPlaceholder.innerHTML = '';
             
             // 3. Set message color
             message.classList.toggle('response', type === 'response');
 
-            // 4. Show container (first step only)
+            // 4. Show container
             if (index === 0) {
                 container.style.display = 'block';
             }
             
             // 5. Play animation
-            container.classList.remove('is-animating');
+            container.classList.remove('is-animating', 'request', 'response');
             setTimeout(() => {
-                container.classList.add('is-animating');
+                container.classList.add('is-animating', type);
             }, 10); 
 
             // 6. Wait, then show the next step
@@ -80,29 +82,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 showStep(index + 1);
             }, stepDelay);
 
-        // --- This is the "Done" step ---
+        // --- "Done" step (unchanged) ---
         } else if (index === animationSteps.length) {
             
-            // 1. Hide the moving message
             message.style.display = 'none';
-            
-            // 2. Show the "Done" text
             explanationText.innerHTML = 'Done! ✔️';
             explanationText.classList.add('done');
-            
-            // 3. Wait, then show the flash message
             setTimeout(showFlashMessage, flashDelay);
         }
     }
 
-    // --- Function to show the flash message ---
+    // --- Function to show the flash message (UPDATED) ---
     function showFlashMessage() {
+        // 1. Show the flash message
         if (finalMessage) {
-            // Create the flash message HTML
             flashPlaceholder.innerHTML = `<div class="flash-message">${finalMessage}</div>`;
+        }
+        
+        // 2. *NEW*: Find the results div
+        const resultsDiv = document.getElementById('search-results-content');
+        
+        // 3. *NEW*: Set a timeout to hide the animation and show the results
+        //    (This happens *after* the flash message appears)
+        setTimeout(() => {
+            // Hide the entire animation box
+            container.style.display = 'none';
+            
+            // Show the search results content
+            if (resultsDiv) {
+                resultsDiv.style.display = 'block';
+            }
+        }, resultsDelay); // Wait 1.5 seconds
+
+        
+        // 4. (Unchanged) Redirect if a URL is provided (for data entry pages)
+        //    This runs on its own timer.
+        if (redirectUrl) {
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, redirectDelay);
         }
     }
 
     // Start the whole sequence!
-    showStep(currentStep);
+    showStep(0);
 });

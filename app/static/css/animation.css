@@ -106,16 +106,23 @@ body {
     position: absolute; 
     top: 15px; 
     opacity: 0; 
-    color: #007bff; 
+    color: #007bff; /* Blue for request */
 }
 .message.response { 
-    color: #28a745; 
+    color: #28a745; /* Green for response */
 }
-.is-animating .message { 
+
+/* * We have two different animation classes that will be triggered by the JavaScript. */
+
+.is-animating.request .message { 
     animation: move-left-to-right 2.5s ease-in-out forwards; 
+}
+.is-animating.response .message {
+    animation: move-right-to-left 2.5s ease-in-out forwards; 
 }
 
 /* --- Keyframes --- */
+
 @keyframes move-left-to-right {
     0% { left: 10%; opacity: 0; }
     20% { opacity: 1; }
@@ -123,16 +130,9 @@ body {
     100% { left: 85%; opacity: 0; }
 }
 
-/* --- Explanation Text --- */
-.explanation {
-    text-align: center;
-    font-style: italic;
-    color: #555;
-    margin-top: 15px;
-}
-.explanation.done {
-    font-size: 1.5rem;
-    font-weight: bold;
-    font-style: normal;
-    color: #28a745; /* Green */
+@keyframes move-right-to-left {
+    0% { left: 85%; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: 10%; opacity: 0; }
 }

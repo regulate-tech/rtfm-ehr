@@ -335,16 +335,18 @@ def dashboard(ehr_id, nhs_number):
     )
 
 # --- Clinic Check Route ---
-@bp.route('/enter_clinic_check/<ehr_id>', methods=['GET', 'POST'])
-def enter_clinic_check(ehr_id):
+#
+# 1. ADD <nhs_number> TO THE ROUTE
+#
+@bp.route('/enter_clinic_check/<ehr_id>/<nhs_number>', methods=['GET', 'POST'])
+def enter_clinic_check(ehr_id, nhs_number):  # <-- 2. ADD nhs_number HERE
     """Display form and handle submission for clinic_check template."""
     form = VitalSignsForm()
-    nhs = request.args.get('nhs_number', '')
-
-    # These will be 'None' or empty on a GET request
+    
+    # Initialize all variables that will be passed to the template
     anim_data = None
     final_msg = ""
-    redirect_url = ""
+    redirect_url = ""  
     
     if form.validate_on_submit():
         systolic, diastolic = form.systolic.data, form.diastolic.data
@@ -353,24 +355,20 @@ def enter_clinic_check(ehr_id):
             success = ehrbase_api.post_composition(ehr_id, composition)
             
             if success:
-                # 1. Set the final message for the animation
                 final_msg = f"Clinic Check BP submitted for EHR ID: {ehr_id}"
                 
-                # 2. Define the animation steps
                 steps_list = [
-                    ['You', 'EHR Manager', '1. Your PC sends data to the EHR Manager via an API call.', 'request'],
-                    ['EHR Manager', 'EHR Database', '2. The EHR Manager accepts the data and writes it to the EHR database...', 'request'],
-                    ['EHR Manager', 'You', '3. The EHR Manager sends you a confirmation that it has add the record..', 'response']
+                    ['You', 'EHR Manager', '1. You send data to the EHR via an API...', 'request'],
+                    ['EHR Manager', 'EHR Database', '2. EHR Manager checks and sends data to the Database...', 'request'],
+                    ['EHR Manager', 'EHR Database', '3. Database tells the EHR Manager it has saved the data...', 'response'],
+                    ['You', 'EHR Manager', '4. EHR Manager sends you a confirmation code...', 'response']
                 ]
                 anim_data = json.dumps(steps_list)
-                
-                # * NEW: 3. Generate the URL to redirect to after the animation
-                redirect_url = url_for('data_entry.dashboard', ehr_id=ehr_id, nhs_number=nhs)                # 3. (REMOVED) We no longer redirect or flash.
-                # The code will now fall through to the render_template
-                # call below, which is what we want.
+
+                # This line now works, because 'nhs_number' is available
+                redirect_url = url_for('data_entry.dashboard', ehr_id=ehr_id, nhs_number=nhs_number)
                 
             else:
-                # Handle the case where the API call itself fails
                 flash("EHR API call failed. Composition not saved.", "error")
 
         except Exception as e:
@@ -383,11 +381,11 @@ def enter_clinic_check(ehr_id):
         title='Enter Clinic Check Vitals',
         animation_data=anim_data,
         final_message=final_msg,
-        redirect_url=redirect_url, # * NEW: Pass the URL to the template
         node_map_data=get_node_map(),
+        redirect_url=redirect_url,
         form=form,
         ehr_id=ehr_id,
-        nhs_number=nhs
+        nhs_number=nhs_number  # This now correctly passes the nhs_number
     )
 
 # --- HbA1c Generator Route ---
@@ -395,8 +393,15 @@ def enter_clinic_check(ehr_id):
 def generate_hba1c(ehr_id, nhs_number):
     """
     Auto-generates a random HbA1c lab result and posts it.
+    Now re-renders the dashboard with an animation.
     """
     form = CsrfOnlyForm()
+
+    # Initialize all variables that will be passed to the template
+    anim_data = None
+    final_msg = ""
+    redirect_url = ""
+
     if form.validate_on_submit():
         try:
             hba1c_val = random.uniform(30.0, 50.0)
@@ -404,11 +409,39 @@ def generate_hba1c(ehr_id, nhs_number):
             success = ehrbase_api.post_composition(ehr_id, composition)
             
             if success:
-                flash(f"Generated HbA1c result ({hba1c_val:.1f} mmol) for EHR {ehr_id}", "success")
+                # 1. Set the final message (from your old flash message)
+                final_msg = f"Generated HbA1c result ({hba1c_val:.1f} mmol) for EHR {ehr_id}"
+                
+                # 2. Define the animation steps (copied from clinic_check)
+                steps_list = [
+                    ['Laboratory', 'EHR Manager', '1. Lab system sends data to the EHR Manager via its API...', 'request'],
+                    ['EHR Manager', 'EHR Database', '2. EHR Manager checks and sends the record to the database... ', 'request'],
+                    ['Laboratory', 'EHR Manager', '3. EHR Manager confirms the save to the Lab system...', 'response']
+                ]
+                anim_data = json.dumps(steps_list)
+
+                # 3. Generate the redirect URL for the JavaScript
+                redirect_url = url_for('data_entry.dashboard', ehr_id=ehr_id, nhs_number=nhs_number)
+                
+            else:
+                flash("EHR API call failed for HbA1c. Composition not saved.", "error")
+
         except Exception as e:
             flash(f"Error generating/posting HbA1c: {e}", 'error')
             print(f"HbA1c Comp error: {e}")
     else:
         flash("Invalid request (CSRF token missing or expired).", "error")
         
-    return redirect(url_for('data_entry.dashboard', ehr_id=ehr_id, nhs_number=nhs_number))
+    # 4. Render the dashboard template, passing in all the data
+    #    (This replaces the old 'return redirect(...)')
+    return render_template(
+        'data_entry/data_entry_dashboard.html',
+        title='Patient Data Entry',
+        animation_data=anim_data,
+        final_message=final_msg,
+        node_map_data=get_node_map(),
+        redirect_url=redirect_url,
+        form=form,
+        ehr_id=ehr_id,
+        nhs_number=nhs_number
+    )
