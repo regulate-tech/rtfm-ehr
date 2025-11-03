@@ -344,6 +344,7 @@ def enter_clinic_check(ehr_id):
     # These will be 'None' or empty on a GET request
     anim_data = None
     final_msg = ""
+    redirect_url = ""
     
     if form.validate_on_submit():
         systolic, diastolic = form.systolic.data, form.diastolic.data
@@ -363,7 +364,8 @@ def enter_clinic_check(ehr_id):
                 ]
                 anim_data = json.dumps(steps_list)
                 
-                # 3. (REMOVED) We no longer redirect or flash.
+                # * NEW: 3. Generate the URL to redirect to after the animation
+                redirect_url = url_for('data_entry.dashboard', ehr_id=ehr_id, nhs_number=nhs)                # 3. (REMOVED) We no longer redirect or flash.
                 # The code will now fall through to the render_template
                 # call below, which is what we want.
                 
@@ -381,6 +383,7 @@ def enter_clinic_check(ehr_id):
         title='Enter Clinic Check Vitals',
         animation_data=anim_data,
         final_message=final_msg,
+        redirect_url=redirect_url, # * NEW: Pass the URL to the template
         node_map_data=get_node_map(),
         form=form,
         ehr_id=ehr_id,
