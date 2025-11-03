@@ -14,6 +14,68 @@
       {% endif %}
     {% endwith %}
 
+    {% if searched_nhs %}
+        
+        {% include '_animation_widget.html' %}
+
+        <div id="search-results-content" style="display: none;">
+            <h3>Results for NHS Number: {{ searched_nhs }}</h3>
+
+            {% if ehr_id %}
+                <p><strong>EHR ID:</strong> {{ ehr_id }}</p>
+
+                {% if compositions %}
+                    <h4>Compositions:</h4>
+                    {% for comp in compositions %}
+                        <div style="border: 1px solid #ccc; margin-bottom: 15px; padding: 10px; background-color: #f9f9f9;">
+                            <strong>Composition Name:</strong> {{ comp.name.value | default('N/A') }}<br>
+                            <strong>Recorded Time:</strong>
+                                {% if comp.context and comp.context.start_time %}
+                                    {{ comp.context.start_time.value | default('N/A')}}
+                                {% else %} N/A {% endif %}<br>
+
+                            {% if comp.parsed_data %}
+                                <table style="margin-top: 10px; border: 1px solid #aaa; background-color: #fff;">
+                                    <thead>
+                                        <tr style="background-color: #eee;">
+                                            <th style="padding: 5px; border-bottom: 1px solid #aaa;">Measurement</th>
+                                            <th style="padding: 5px; border-bottom: 1px solid #aaa;">Value</th>
+                                            <th style="padding: 5px; border-bottom: 1px solid #aaa;">Units</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in comp.parsed_data %}
+                                        <tr>
+                                            <td style="padding: 5px;"><strong>{{ item.name }}</strong></td>
+                                            <td style="padding: 5px;">{{ item.value }}</td>
+                                            <td style="padding: 5px;">{{ item.units }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            {% else %}
+                                <p><em>(No key data extracted from this composition)</em></p>
+                            {% endif %}
+                            <details style="margin-top: 10px;">
+                                <summary>View Full Composition Data (JSON)</summary>
+                                <pre><code>{{ comp.pretty_json }}</code></pre>
+                            </details>
+                        </div>
+                    {% endfor %}
+                {% elif not error_message %}
+                    <p>No compositions found in this EHR.</p>
+                {% endif %}
+
+            {% elif error_message %}
+                <p style="color: orange;">{{ error_message }}</p>
+            {% elif get_flashed_messages(category_filter=['error']) %}
+                 <p style="color: red;">Could not retrieve EHR details. See messages above.</p>
+            {% endif %}
+        </div> {# #}
+        
+    {% endif %} {# #}
+
+
     <p>Enter an NHS Number to retrieve and view the patient's EHR compositions.</p>
 
     <form method="POST" action="{{ url_for('clinician.home') }}" novalidate>
@@ -29,61 +91,6 @@
     </form>
     <hr>
 
-    {# Display results if a search was performed #}
-    {% if searched_nhs %}
-        <h3>Results for NHS Number: {{ searched_nhs }}</h3>
-
-        {% if ehr_id %}
-            <p><strong>EHR ID:</strong> {{ ehr_id }}</p>
-
-            {% if compositions %}
-                <h4>Compositions:</h4>
-                {% for comp in compositions %}
-                    <div style="border: 1px solid #ccc; margin-bottom: 15px; padding: 10px; background-color: #f9f9f9;">
-                        <strong>Composition Name:</strong> {{ comp.name.value | default('N/A') }}<br>
-                        <strong>Recorded Time:</strong>
-                            {% if comp.context and comp.context.start_time %}
-                                {{ comp.context.start_time.value | default('N/A')}}
-                            {% else %} N/A {% endif %}<br>
-
-                        {% if comp.parsed_data %}
-                            <table style="margin-top: 10px; border: 1px solid #aaa; background-color: #fff;">
-                                <thead>
-                                    <tr style="background-color: #eee;">
-                                        <th style="padding: 5px; border-bottom: 1px solid #aaa;">Measurement</th>
-                                        <th style="padding: 5px; border-bottom: 1px solid #aaa;">Value</th>
-                                        <th style="padding: 5px; border-bottom: 1px solid #aaa;">Units</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in comp.parsed_data %}
-                                    <tr>
-                                        <td style="padding: 5px;"><strong>{{ item.name }}</strong></td>
-                                        <td style="padding: 5px;">{{ item.value }}</td>
-                                        <td style="padding: 5px;">{{ item.units }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        {% else %}
-                            <p><em>(No key data extracted from this composition)</em></p>
-                        {% endif %}
-                        <details style="margin-top: 10px;">
-                            <summary>View Full Composition Data (JSON)</summary>
-                            <pre><code>{{ comp.pretty_json }}</code></pre>
-                        </details>
-                    </div>
-                {% endfor %}
-            {% elif not error_message %}
-                <p>No compositions found in this EHR.</p>
-            {% endif %}
-
-        {% elif error_message %}
-            <p style="color: orange;">{{ error_message }}</p>
-        {% elif get_flashed_messages(category_filter=['error']) %}
-             <p style="color: red;">Could not retrieve EHR details. See messages above.</p>
-        {% endif %}
-
-    {% endif %} {# end if searched_nhs #}
+    {# The results block used to be here #}
 
 {% endblock %}

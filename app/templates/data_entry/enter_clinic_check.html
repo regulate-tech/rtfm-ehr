@@ -2,6 +2,8 @@
 
 {% block content %}
     <h2>Enter Vital Signs (Clinic Check)</h2>
+ 
+    {% include '_animation_widget.html' %}
 
      {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
