@@ -1,0 +1,138 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+/* Button styles */
+.actions { 
+    display: flex; 
+    gap: 10px; 
+    margin-bottom: 20px; 
+    border-bottom: 2px solid #eee; 
+    padding-bottom: 20px; 
+}
+.actions button { 
+    font-size: 1rem; 
+    padding: 10px 15px; 
+    border: none; 
+    border-radius: 5px; 
+    background-color: #007bff; 
+    color: white; 
+    cursor: pointer; 
+}
+.actions button:hover { 
+    background-color: #0056b3; 
+}
+
+/* --- Main Animation Layout --- */
+.animation-container {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px 40px;
+    max-width: 600px;
+    margin: auto;
+    animation: fade-in 0.5s ease-out;
+}
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Flash Message Styles --- */
+#flash-message-placeholder {
+    width: 100%;
+    margin-bottom: 15px;
+}
+.flash-message {
+    padding: 1rem;
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+    color: #0056b3;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    
+    /* Animation */
+    opacity: 0;
+    animation: fade-in-flash 0.5s ease-out forwards;
+}
+@keyframes fade-in-flash {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Node Styles --- */
+.diagram-nodes { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 10px; 
+}
+.node { 
+    width: 45%; 
+    padding: 20px; 
+    text-align: center; 
+    font-weight: bold; 
+    border-radius: 8px; 
+    font-size: 1.1rem; 
+    background-color: #e9ecef; 
+    border: 2px solid #ced4da; 
+}
+.node-you { 
+    background-color: #e6f7ff; 
+    border-color: #91d5ff; 
+}
+.node-ehr { 
+    background-color: #fffbe6; 
+    border-color: #ffe58f; 
+}
+.node-db { 
+    background-color: #f6ffed; 
+    border-color: #b7eb8f; 
+}
+.node-pmi { 
+    background-color: #fff0f6; 
+    border-color: #ffadd2; 
+}
+
+/* --- Animation System --- */
+.diagram-paths { 
+    position: relative; 
+    height: 60px; 
+}
+.message { 
+    font-size: 1.5rem; 
+    position: absolute; 
+    top: 15px; 
+    opacity: 0; 
+    color: #007bff; 
+}
+.message.response { 
+    color: #28a745; 
+}
+.is-animating .message { 
+    animation: move-left-to-right 2.5s ease-in-out forwards; 
+}
+
+/* --- Keyframes --- */
+@keyframes move-left-to-right {
+    0% { left: 10%; opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { left: 85%; opacity: 0; }
+}
+
+/* --- Explanation Text --- */
+.explanation {
+    text-align: center;
+    font-style: italic;
+    color: #555;
+    margin-top: 15px;
+}
+.explanation.done {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-style: normal;
+    color: #28a745; /* Green */
+}

@@ -6,6 +6,7 @@ import datetime
 import uuid
 import json
 import random
+from app import get_node_map  # <-- Import our helper
 
 bp = Blueprint('data_entry', __name__)
 
@@ -340,21 +341,47 @@ def enter_clinic_check(ehr_id):
     form = VitalSignsForm()
     nhs = request.args.get('nhs_number', '')
 
+    # These will be 'None' or empty on a GET request
+    anim_data = None
+    final_msg = ""
+    
     if form.validate_on_submit():
         systolic, diastolic = form.systolic.data, form.diastolic.data
         try:
             composition = create_clinic_check_composition(systolic, diastolic)
             success = ehrbase_api.post_composition(ehr_id, composition)
+            
             if success:
-                flash(f"Clinic Check BP submitted for EHR ID: {ehr_id}", "success")
-                return redirect(url_for('data_entry.dashboard', ehr_id=ehr_id, nhs_number=nhs))
+                # 1. Set the final message for the animation
+                final_msg = f"Clinic Check BP submitted for EHR ID: {ehr_id}"
+                
+                # 2. Define the animation steps
+                steps_list = [
+                    ['You', 'EHR Manager', '1. Your PC sends data to the EHR Manager via an API call.', 'request'],
+                    ['EHR Manager', 'EHR Database', '2. The EHR Manager accepts the data and writes it to the EHR database...', 'request'],
+                    ['EHR Manager', 'You', '3. The EHR Manager sends you a confirmation that it has add the record..', 'response']
+                ]
+                anim_data = json.dumps(steps_list)
+                
+                # 3. (REMOVED) We no longer redirect or flash.
+                # The code will now fall through to the render_template
+                # call below, which is what we want.
+                
+            else:
+                # Handle the case where the API call itself fails
+                flash("EHR API call failed. Composition not saved.", "error")
+
         except Exception as e:
             flash(f"Error creating/posting composition: {e}", 'error')
             print(f"Comp error: {e}")
             
+    # This render_template is now used for both GET and POST
     return render_template(
         'data_entry/enter_clinic_check.html',
         title='Enter Clinic Check Vitals',
+        animation_data=anim_data,
+        final_message=final_msg,
+        node_map_data=get_node_map(),
         form=form,
         ehr_id=ehr_id,
         nhs_number=nhs

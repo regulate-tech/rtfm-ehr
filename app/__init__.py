@@ -1,6 +1,18 @@
-# --- app/__init__.py ---
+﻿# --- app/__init__.py ---
 from flask import Flask, render_template
 from config import Config
+import json
+
+NODE_PROPERTIES = {
+    'You': {'emoji': '👩‍💻', 'class': 'node-you'},
+    'EHR Manager': {'emoji': '🗄️', 'class': 'node-ehr'},
+    'EHR Database': {'emoji': '💾', 'class': 'node-db'},
+    'PMI Database': {'emoji': '📈', 'class': 'node-pmi'},
+}
+
+def get_node_map():
+    """Helper to get the node properties as a JSON string."""
+    return json.dumps(NODE_PROPERTIES)
 
 def create_app(config_class=Config):
     """Factory function to create the Flask app instance."""
