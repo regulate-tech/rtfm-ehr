@@ -145,7 +145,7 @@ th {
     width: 150px; /* Fixed width for labels */
 }
 
-/* Details/Summary for JSON */
+/* Details Summary for JSON */
 details {
     margin-top: 0.5em;
 }
@@ -175,4 +175,35 @@ fieldset {
 legend {
     font-weight: bold;
     padding: 0 0.5em;
+}
+
+/*
+ * Styles for action buttons on dashboard pages
+ */
+
+/* Target the forms we're using as buttons */
+.action-button-form {
+    margin-bottom: 1rem; /* Add 1rem of space below each button */
+}
+
+/* Style the button itself */
+.action-button-form button {
+    display: inline-block;
+    padding: 10px 18px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #007bff; /* A standard blue */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    
+    /* Smooth transition for hover effect */
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Hover effect */
+.action-button-form button:hover {
+    background-color: #0056b3; /* A darker blue */
 }
