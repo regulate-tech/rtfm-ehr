@@ -1,0 +1,25 @@
+<div 
+    id="animation-container"
+    class="animation-container" 
+    style="display: none;"
+    data-steps="{{ animation_data | default('[]') | e }}"
+    data-nodes="{{ node_map_data | default('{}') | e }}"
+    data-final-message="{{ final_message | default('') | e }}"
+>
+    <div id="flash-message-placeholder"></div>
+
+    <div class="diagram-nodes">
+        <div class="node" id="node-sender">Sender</div>
+        <div class="node" id="node-receiver">Receiver</div>
+    </div>
+
+    <div class="diagram-paths">
+        <div class="message-path">
+            <div id="message" class="message">✉️</div>
+        </div>
+    </div>
+
+    <p class="explanation" id="explanation-text">
+        Explanation...
+    </p>
+</div>
