@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{122453ca-e84a-4208-858f-d0ea604a755d}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>add_pmi_records.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="app\static\animation.js" />
+    <Content Include="app\static\css\animation.css" />
+    <Content Include="app\static\css\style.css" />
+    <Content Include="app\templates\admin\add_pmi.html" />
+    <Content Include="app\templates\admin\admin_home.html" />
+    <Content Include="app\templates\admin\batch_pmi.html" />
+    <Content Include="app\templates\admin\search_pmi.html" />
+    <Content Include="app\templates\admin\view_create_ehr.html" />
+    <Content Include="app\templates\base.html" />
+    <Content Include="app\templates\clinician\clinician_home.html" />
+    <Content Include="app\templates\data_entry\data_entry_dashboard.html" />
+    <Content Include="app\templates\data_entry\enter_clinic_check.html" />
+    <Content Include="app\templates\data_entry\enter_vitals.html" />
+    <Content Include="app\templates\data_entry\search_data_entry.html" />
+    <Content Include="app\templates\index.html" />
+    <Content Include="app\templates\patient\patient_home.html" />
+    <Content Include="app\templates\_animation_widget.html" />
+    <Content Include="config.ini" />
+    <Content Include="requirements.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="add_pmi_records.py" />
+    <Compile Include="app\blueprints\admin.py" />
+    <Compile Include="app\blueprints\clinician.py" />
+    <Compile Include="app\blueprints\data_entry.py" />
+    <Compile Include="app\blueprints\forms.py" />
+    <Compile Include="app\blueprints\patient.py" />
+    <Compile Include="app\blueprints\__init__.py" />
+    <Compile Include="app\composition_parser.py" />
+    <Compile Include="app\ehrbase_api.py" />
+    <Compile Include="app\__init__.py" />
+    <Compile Include="config.py" />
+    <Compile Include="install_templates.py" />
+    <Compile Include="run.py" />
+    <Compile Include="setup_pmi_database.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="app" />
+    <Folder Include="app\blueprints" />
+    <Folder Include="app\static" />
+    <Folder Include="app\static\css" />
+    <Folder Include="app\templates" />
+    <Folder Include="app\templates\admin" />
+    <Folder Include="app\templates\clinician" />
+    <Folder Include="app\templates\data_entry" />
+    <Folder Include="app\templates\patient" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
