@@ -6,6 +6,7 @@ from wtforms.validators import DataRequired, Length, Optional, Email, Regexp, Nu
 class AddPmiForm(FlaskForm):
     """Form for adding a new patient to the PMI."""
     nhs_number = StringField('NHS Number', validators=[DataRequired(), Length(10, 10), Regexp('^[0-9]*$')])
+    nhs_number = StringField('NHS Number', validators=[DataRequired(), Length(10, 10), Regexp('^[0-9]*$')])
     title = StringField('Title', validators=[Optional(), Length(max=35)])
     given_name = StringField('Given Name', validators=[DataRequired(), Length(max=100)])
     family_name = StringField('Family Name', validators=[DataRequired(), Length(max=100)])
